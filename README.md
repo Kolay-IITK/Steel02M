@@ -1,7 +1,7 @@
 # Steel02M: An Improved Giuffr`e-Menegotto-Pinto Model
 
 
-A well-known limitation of the original `Steel02` material model in OpenSees is that after a small partial unloading, the stress–strain curve does not correctly retrace the original loading path during reloading. This behavior often leads to artificially high stress predictions, which can distort cyclic analysis results.
+A well-known limitation of the original `Steel02` material model in OpenSees is that after a small partial unloading, the stress–strain curve does not correctly retrace the original loading path during reloading. This behavior often leads to overshooting of stress, which can distort cyclic analysis results.
 
 The `Steel02M` uniaxial material model resolves this issue by introducing:
 - **Improved energy-based path-following rules** to ensure the reloading curve returns to the correct envelope.
