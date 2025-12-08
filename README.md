@@ -10,12 +10,12 @@ The `Steel02M` uniaxial material model resolves this issue by introducing:
 
 ### Input Syntax
 ```tcl
-uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 $fysfyPos $fysfyNeg $a_pos $a_neg <$b1 $b2> <Ed_tol>
+uniaxialMaterial Steel02M $matTag $E_0 $FyPos $FyNeg $alpha $R0 $cR1 $cR2 $fysfyPos $fysfyNeg $a_pos $a_neg <$b1 $b2> <Ed_tol>
 ```
 | Parameter | Type  | Description                                                                |
 | --------- | ----- | -------------------------------------------------------------------------- |
 | `$matTag` | int   | Unique tag for this material instance                                      |
-| `$E`      | float | Elastic Young’s modulus                                                            |
+| `$E_0`      | float | Elastic Young’s modulus                                                            |
 | `$FyPos`     | float | Initial yield strength in positive loading direction                               |
 | `$FyNeg`   | float |  Initial yield strength in negative loading direction                           |
 | `$alpha`  | float | Post yield stiffness ratio                                                   |
