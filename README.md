@@ -89,8 +89,8 @@ constraints Plain
 test NormDispIncr 1e-8 10
 algorithm Newton
 # strain peaks in units of 1e-3
-set strainPeaks {0 2 1 28 13 28 13 15 14 18 17 27 25 26 23 24 6}
-set de 1e-5 ;# displacement increment per step
+set strainPeaks {0.001 2 1.023 27.629 13.373 27.259 13.506 15.282 14.389 18.020 17.718 27.325 24.932 25.961 23.187 23.486 6.109}
+set de 1e-4 ;# displacement increment per step
 foreach peak $strainPeaks {    
     set targetDisp [expr $peak * 1e-3]
     set currentDisp [nodeDisp 2 1]
@@ -108,11 +108,12 @@ foreach peak $strainPeaks {
     }
     analysis Static
     if {[analyze $nSteps] != 0} {
-        puts "Analysis failed going to peak $peak"
+        puts "Analysis failed going to peak value $peak"
         break
     }
 }
 puts "Finished all peak loadings."
+
 
 
 
