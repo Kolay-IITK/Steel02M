@@ -30,8 +30,8 @@ uniaxialMaterial Steel02M $matTag  $E₀ $σᵧ₀⁺ $σᵧ₀⁻ $α $R₀ $c�
 | $b⁻   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8)  |
 | $ΔŪₜₒₗ     |float | Normalized energy tolerance for identifying partial unloading  (default 0.02)    |
 
-### Example TCL Input
-
+### Example TCL Input 
+This TCL input file generates the σ–ε response using the Steel02M material model presented in Figure 9 of the paper.
 ```tcl
 # -----------------------------
 # Horizontal axial element(truss) with unit length and area with Steel02M material model
