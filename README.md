@@ -41,6 +41,12 @@ $$
 \varepsilon_{y0}^{\pm} = \frac{\sigma_{y0}^{\pm}}{E_0}
 $$
 
+<p align="center">
+  <img src="Stress-strain_plot.png" width="500"><br>
+  <em>Figure : Stress-strain response using Steel02 and Steel02M</em>
+</p>
+
+
     
 ### Input Syntax
 ```tcl
