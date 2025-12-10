@@ -1,13 +1,13 @@
 # Steel02M: An Improved Giuffr`e-Menegotto-Pinto Model
 
-A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance ΔŪₜₒₗ  for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when ΔŪₜₒₗ=−1 is used keeping all other parameters the same between the two models.
+A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance $\Delta \overline{U}_{tol}$ for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when $\Delta \overline{U}_{tol}=-1$ is used, keeping all other parameters the same between the two models.
 
 The features of the Steel02M are as follows:
 - Eliminates the overshooting error caused by Steel02
-- Allows users to specify different initial yield strength in positive and negative loading directions
+- Allows users to specify different initial yield strengths in positive and negative loading directions
 - Removes redundant parameters in isotropic hardening of Steel02 (see the equations below for isotropic hardening in Steel02 and Steel02M) 
-- Allows users to control the rate of isotropic hardening in positive and negative loading direction through parameters (b⁺ and b⁻)
-- Allows user to limit the hardened yield strength through parameters (fᵧₛ⁺ and fᵧₛ⁻)
+- Allows users to control the rate of isotropic hardening in positive and negative loading directions through parameters ($b^\pm$)
+- Allows user to limit the hardened yield strength through parameters ($\eta^\pm$)
 
 **Steel02:**
 
@@ -57,7 +57,7 @@ uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos 
 | $matTag | int   | Unique tag for this material instance                                      |
 | $E   | float | Elastic Young’s modulus                                                            |
 | $Fypos  | float | Initial yield strength in positive loading direction                               |
-| $FyNeg  | float |  Initial yield strength in negative loading direction                            |
+| $FyNeg  | float |  Initial yield strength in negative loading direction (must be negative)                           |
 | $alpha   | float | Strain hardening ratio                                                    |
 | $R0  | float |  Initial value of R that controls smoothness of transition                                                   |
 | $cR1 | float | Controls the rate of change of R |
@@ -75,7 +75,7 @@ This TCL input file generates the σ–ε response shown in the figure for the S
 ```tcl
 # -----------------------------
 # Horizontal axial element(truss) with unit length and area with Steel02M material model
-#Unit considered:N,mm
+#Unit considered: N and mm
 # -----------------------------
 wipe
 model BasicBuilder -ndm 2 -ndf 2
@@ -147,7 +147,7 @@ foreach peak $strainPeaks {
     }
     analysis Static
 }
-puts "Finished all peak loadings."
+puts "Finished analysis"
 
 
 
