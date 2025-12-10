@@ -101,7 +101,7 @@ set cR1 0.916; # cR1:  Parameter controlling transition curvature
 set cR2 0.15; # cR2:  Parameter controlling transition curvature 
 set a_pos 0.0; # Control rate of transition in positive loading direction
 set a_neg 0.074; # Control rate of transition in negative loading direction
-#uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$fysfyPos $fysfyNeg>  <$b1 $b2> <Ed_tol>
+#uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$FysFyPos $FysFyNeg>  <$b_pos $b_neg> <Ed_tol>
 uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $b $R0 $cR1 $cR2 $a_pos $a_neg
 # -----------------------------
 # Truss
@@ -127,8 +127,8 @@ numberer RCM
 constraints Plain
 test NormDispIncr 1e-8 10
 algorithm Newton
-# strain peaks in units of 1e-3
-set strainPeaks {0 0 20 10 276 134 273 135 153 144 180 177 273 249 260 232 235 61}
+# strain peaks in units of 1e-4
+set strainPeaks {0 0 50 30 276 134 273 135 153 144 180 177 273 249 260 232 235 61}
 set de 1e-5 ;# displacement increment per step
 foreach peak $strainPeaks {    
     set targetDisp [expr $peak * 1e-4]
