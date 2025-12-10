@@ -43,32 +43,32 @@ $$
 
 <p align="center">
   <img src="Stress-strain_plot.png" width="500"><br>
-  <em>Figure : Stress-strain response using Steel02 and Steel02M</em>
+  <em>Figure : Comparison of stress-strain response using Steel02 and Steel02M</em>
 </p>
 
 
     
 ### Input Syntax
 ```tcl
-uniaxialMaterial Steel02M $matTag  $E₀ $σᵧ₀⁺ $σᵧ₀⁻ $α $R₀ $cᵣ₁ $cᵣ₂ <$a⁺ $a⁻> <$fᵧₛ⁺ $fᵧₛ⁻> <$b1 $b2> <$ΔŪₜₒₗ >
+uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$fysfyPos $fysfyNeg>  <$b1 $b2> <Ed_tol>
 ```
 | Parameter | Type  | Description                                                                |
 | --------- | ----- | -------------------------------------------------------------------------- |
 | $matTag | int   | Unique tag for this material instance                                      |
-| $E₀   | float | Elastic Young’s modulus                                                            |
-| $σᵧ₀⁺  | float | Initial yield strength in positive loading direction                               |
-| $σᵧ₀⁻   | float |  Initial yield strength in negative loading direction                            |
-| $α   | float | Strain hardening ratio                                                    |
-| $R₀  | float |  Initial value of R that controls smoothness of transition                                                   |
-| $cᵣ₁ | float | Controls the rate of change of R |
-| $cᵣ₂   | float | Controls the rate of change of R|
-| $a⁺   | float | Controls cyclic isotropic hardening in positive loading direction (default 0)     |
-| $a⁻ | float | Controls cyclic isotropic hardening in negative loading direction (default 0)  |
-| $fᵧₛ⁺   | float |  Saturation to initial yield strength ratios in positive direction (default 1.5) |
-| $fᵧₛ⁻   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5)  |
-| $b⁺  | float| Controls rate of cyclic isotropic hardening in positive direction (default 0.8)  |
-| $b⁻   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8)  |
-| $ΔŪₜₒₗ     |float | Normalized energy tolerance for identifying partial unloading  (default 0.02)    |
+| $E   | float | Elastic Young’s modulus                                                            |
+| $Fypos  | float | Initial yield strength in positive loading direction                               |
+| $FyNeg  | float |  Initial yield strength in negative loading direction                            |
+| $alpha   | float | Strain hardening ratio                                                    |
+| $R0  | float |  Initial value of R that controls smoothness of transition                                                   |
+| $cR1 | float | Controls the rate of change of R |
+| $cR2   | float | Controls the rate of change of R|
+| $a_pos   | float | Controls cyclic isotropic hardening in positive loading direction (default 0)     |
+| $a_neg | float | Controls cyclic isotropic hardening in negative loading direction (default 0)  |
+| $fysfyPos  | float |  Saturation to initial yield strength ratios in positive direction (default 1.5) |
+| $fysfyNeg   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5)  |
+| $b1  | float| Controls rate of cyclic isotropic hardening in positive direction (default 0.8)  |
+| $b2   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8)  |
+| $Ed_tol     |float | Normalized energy tolerance for identifying partial unloading  (default 0.02)    |
 
 ### Example TCL Input 
 This TCL input file generates the σ–ε response shown in the figure for the Steel02M material model.
@@ -89,7 +89,6 @@ fix 1 1 1
 fix 2 0 1
 # -----------------------------
 # Define Steel02M uniaxial material Arguments:
-# matTag  E₀ σᵧ₀⁺ σᵧ₀⁻ α R₀ $cᵣ₁ $cᵣ₂ <$fᵧₛ⁺ $fᵧₛ⁻ $a⁺ $a⁻ $b1 $b2 Ed_tol>
 # matTag E FyPos FyNeg alpha R0 cR1 cR2 <fysfyPos fysfyNeg> <a_pos a_neg> <b1 b2> <Ed_tol>
 set matTag 1
 set Fy 300
@@ -129,10 +128,10 @@ constraints Plain
 test NormDispIncr 1e-8 10
 algorithm Newton
 # strain peaks in units of 1e-3
-set strainPeaks {0.001 2 1.023 27.629 13.373 27.259 13.506 15.282 14.389 18.020 17.718 27.325 24.932 25.961 23.187 23.486 6.109}
-set de 1e-4 ;# displacement increment per step
+set strainPeaks {0 0 20 10 276 134 273 135 153 144 180 177 273 249 260 232 235 61}
+set de 1e-5 ;# displacement increment per step
 foreach peak $strainPeaks {    
-    set targetDisp [expr $peak * 1e-3]
+    set targetDisp [expr $peak * 1e-4]
     set currentDisp [nodeDisp 2 1]
     set dU [expr $targetDisp - $currentDisp]
     set nSteps [expr round(($dU)/$de)]
