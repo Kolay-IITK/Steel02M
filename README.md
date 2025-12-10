@@ -1,6 +1,6 @@
 # Steel02M: An Improved Giuffr`e-Menegotto-Pinto Model
 
-A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance $\Delta \overline{U}_{tol}$ for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when $\Delta \overline{U}_{tol}=-1$ is used, keeping all other parameters the same between the two models.
+A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance $\Delta \overline{U}_{tol}$ for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when this tolerance is set to $-1$, keeping all other parameters the same between the two models.
 
 The features of the Steel02M are as follows:
 - Eliminates the overshooting error caused by Steel02
