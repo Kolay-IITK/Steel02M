@@ -1,16 +1,50 @@
 # Steel02M: An Improved Giuffr`e-Menegotto-Pinto Model
 
+A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance ΔŪₜₒₗ  for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when ΔŪₜₒₗ=−1 is used keeping all other parameters the same between the two models.
 
-A well-known limitation of the original `Steel02` material model in OpenSees is that after a small partial unloading, the stress–strain curve does not correctly retrace the original loading path during reloading. This behavior often leads to overshooting of stress.
+The features of the Steel02M are as follows:
+- Eliminates the overshooting error caused by Steel02
+- Allows users to specify different initial yield strength in positive and negative loading directions
+- Removes redundant parameters in isotropic hardening of Steel02 (see the equations below for isotropic hardening in Steel02 and Steel02M) 
+- Allows users to control the rate of isotropic hardening in positive and negative loading direction through parameters (b⁺ and b⁻)
+- Allows user to limit the hardened yield strength through parameters (fᵧₛ⁺ and fᵧₛ⁻)
 
-The `Steel02M` uniaxial material model resolves this issue by introducing:
-- **Improved energy-based path-following rules** to ensure the reloading curve returns to the correct envelope.
-- **Optional tolerance control (`ΔŪₜₒₗ `)** for tuning reversal sensitivity.
-- Control rate of transition in positive and negative loading directions (**b⁺** and **b⁻**).
+**Steel02:**
 
+$$
+\sigma_y^{+} = \sigma_{y0}\left[1 + a_3 \left(\frac{\zeta}{a_4}\right)^{0.8}\right]
+= \sigma_{y0}\left[1 + a^{+}\zeta^{b^{+}}\right]
+$$
+
+$$
+\sigma_y^{-} = \sigma_{y0}\left[1 + a_1 \left(\frac{\zeta}{a_2}\right)^{0.8}\right]
+= \sigma_{y0}\left[1 + a^{-}\zeta^{b^{-}}\right]
+$$
+
+$$
+\zeta = \frac{\varepsilon_{\max}-\varepsilon_{\min}}{2\varepsilon_{y0}}
+$$
+
+
+**Steel02M:**
+
+$$
+\sigma_y^{\pm} = \sigma_{y0}^{\pm}\left[1 + a^{\pm}\zeta^{b^{\pm}}\right]
+\quad \text{subject to } |\sigma_y^{\pm}| \le f_{ys}^{\pm}|\sigma_{y0}^{\pm}|
+$$
+
+$$
+\zeta = \frac{\varepsilon_{\max} - \varepsilon_{\min}}{\varepsilon_{y0}^{+} - \varepsilon_{y0}^{-}}
+$$
+
+$$
+\varepsilon_{y0}^{\pm} = \frac{\sigma_{y0}^{\pm}}{E_0}
+$$
+
+    
 ### Input Syntax
 ```tcl
-uniaxialMaterial Steel02M $matTag  $E₀ $σᵧ₀⁺ $σᵧ₀⁻ $α $R₀ $cᵣ₁ $cᵣ₂ <$a⁺ $a⁻> <$fᵧₛ⁺ $fᵧₛ⁻> <$b1 $b2> <Ed_tol>
+uniaxialMaterial Steel02M $matTag  $E₀ $σᵧ₀⁺ $σᵧ₀⁻ $α $R₀ $cᵣ₁ $cᵣ₂ <$a⁺ $a⁻> <$fᵧₛ⁺ $fᵧₛ⁻> <$b1 $b2> <$ΔŪₜₒₗ >
 ```
 | Parameter | Type  | Description                                                                |
 | --------- | ----- | -------------------------------------------------------------------------- |
@@ -31,7 +65,7 @@ uniaxialMaterial Steel02M $matTag  $E₀ $σᵧ₀⁺ $σᵧ₀⁻ $α $R₀ $c�
 | $ΔŪₜₒₗ     |float | Normalized energy tolerance for identifying partial unloading  (default 0.02)    |
 
 ### Example TCL Input 
-This TCL input file generates the σ–ε response using the Steel02M material model presented in Figure 9 of the paper.
+This TCL input file generates the σ–ε response shown in the figure for the Steel02M material model.
 ```tcl
 # -----------------------------
 # Horizontal axial element(truss) with unit length and area with Steel02M material model
@@ -107,10 +141,6 @@ foreach peak $strainPeaks {
         }
     }
     analysis Static
-    if {[analyze $nSteps] != 0} {
-        puts "Analysis failed going to peak value $peak"
-        break
-    }
 }
 puts "Finished all peak loadings."
 
@@ -121,10 +151,8 @@ puts "Finished all peak loadings."
 
 
 ```
-
-### Notes
-- If ΔŪₜₒₗ  is not specified in the input, a default value of **0.02** is used.
-- Positive and negative curvature transition parameters are explicitly mentioned in positive and negative directions.
+Code developed by: Dr. Chinmoy Kolay, IIT Kanpur and implemented by Ms. Sukanya Karmakar, IIT Kanpur  
+Images developed by: Ms. Sukanya Karmakar, IIT Kanpur
 
 
 
