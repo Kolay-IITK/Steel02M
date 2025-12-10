@@ -13,12 +13,12 @@ The features of the Steel02M are as follows:
 
 $$
 \sigma_y^{+} = \sigma_{y0}\left[1 + a_3 \left(\frac{\zeta}{a_4}\right)^{0.8}\right]
-= \sigma_{y0}\left[1 + a^{+}\zeta^{b^{+}}\right]
+= \sigma_{y0}\left[1 + a^{+}\zeta^{0.8}\right]
 $$
 
 $$
 \sigma_y^{-} = \sigma_{y0}\left[1 + a_1 \left(\frac{\zeta}{a_2}\right)^{0.8}\right]
-= \sigma_{y0}\left[1 + a^{-}\zeta^{b^{-}}\right]
+= \sigma_{y0}\left[1 + a^{-}\zeta^{0.8}\right]
 $$
 
 $$
@@ -30,7 +30,7 @@ $$
 
 $$
 \sigma_y^{\pm} = \sigma_{y0}^{\pm}\left[1 + a^{\pm}\zeta^{b^{\pm}}\right]
-\quad \text{subject to } |\sigma_y^{\pm}| \le f_{ys}^{\pm}|\sigma_{y0}^{\pm}|
+\quad \text{subject to } |\sigma_y^{\pm}| \le \eta^{\pm}|\sigma_{y0}^{\pm}|
 $$
 
 $$
