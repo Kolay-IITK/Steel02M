@@ -133,10 +133,10 @@ set de 1e-5 ;# displacement increment per step
 foreach peak $strainPeaks {    
     set targetDisp [expr $peak * 1e-4]
     set currentDisp [nodeDisp 2 1]
-    set dU [expr $targetDisp - $currentDisp]
-    set nSteps [expr round(($dU)/$de)]
+    set du [expr $targetDisp - $currentDisp]
+    set nSteps [expr round(($du)/$de)]
     puts "Loading to target strain = $peak x 1e-3 
-    dU = $dU  steps = $nSteps"
+    du = $du  steps = $nSteps"
 
     if {$nSteps != 0} {
         integrator DisplacementControl 2 1 $de
