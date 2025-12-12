@@ -50,7 +50,7 @@ $$
     
 ### Input Syntax
 ```tcl
-uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$FysFyPos $FysFyNeg>  <$b_pos $b_neg> <Ed_tol>
+uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$etaPos $etaNeg>  <$b_pos $b_neg> <Ubar_tol>
 ```
 | Parameter | Type  | Description                                                                |
 | --------- | ----- | -------------------------------------------------------------------------- |
@@ -64,11 +64,11 @@ uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos 
 | $cR2   | float | Controls the rate of change of R|
 | $a_pos   | float | Controls cyclic isotropic hardening in positive loading direction (default 0)     |
 | $a_neg | float | Controls cyclic isotropic hardening in negative loading direction (default 0)  |
-| $FysFyPos  | float |  Saturation to initial yield strength ratios in positive direction (default 1.5) |
-| $FysFyNeg   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5)  |
+| $etaPos  | float |  Saturation to initial yield strength ratios in positive direction (default 1.5) |
+| $etaNeg   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5)  |
 | $b_pos  | float| Controls rate of cyclic isotropic hardening in positive direction (default 0.8)  |
 | $b_neg   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8)  |
-| $Ed_tol     |float | Normalized energy tolerance for identifying partial unloading  (default 0.02)    |
+| $Ubar_tol     |float | Normalized energy tolerance for identifying partial unloading  (default 0.02)    |
 
 ### Example TCL Input 
 This TCL input file generates the σ–ε response shown in the figure for the Steel02M material model.
@@ -100,7 +100,7 @@ set cR1 0.916; # cR1:  Parameter controlling transition curvature
 set cR2 0.15; # cR2:  Parameter controlling transition curvature 
 set a_pos 0.05; # Control rate of transition in positive loading direction
 set a_neg 0.074; # Control rate of transition in negative loading direction
-#uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$FysFyPos $FysFyNeg>  <$b_pos $b_neg> <Ed_tol>
+#uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$etaPos $etaNeg>  <$b_pos $b_neg> <Ubar_tol>
 uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $b $R0 $cR1 $cR2 $a_pos $a_neg
 # -----------------------------
 # Truss
