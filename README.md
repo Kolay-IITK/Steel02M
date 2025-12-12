@@ -1,6 +1,6 @@
 # Steel02M: An Improved Giuffr`e-Menegotto-Pinto Model
 
-A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance $\Delta \overline{U}_{tol}$ for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when this tolerance is set to $-1$, keeping all other parameters the same between the two models.
+A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance $\overline{U}_{tol}$ for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when this tolerance is set to $-1$, keeping all other parameters the same between the two models.
 
 The features of the Steel02M are as follows:
 - Eliminates the overshooting error caused by Steel02
@@ -50,7 +50,7 @@ $$
     
 ### Input Syntax
 ```tcl
-uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$fysfyPos $fysfyNeg>  <$b1 $b2> <Ed_tol>
+uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$FysFyPos $FysFyNeg>  <$b_pos $b_neg> <Ed_tol>
 ```
 | Parameter | Type  | Description                                                                |
 | --------- | ----- | -------------------------------------------------------------------------- |
@@ -64,10 +64,10 @@ uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos 
 | $cR2   | float | Controls the rate of change of R|
 | $a_pos   | float | Controls cyclic isotropic hardening in positive loading direction (default 0)     |
 | $a_neg | float | Controls cyclic isotropic hardening in negative loading direction (default 0)  |
-| $fysfyPos  | float |  Saturation to initial yield strength ratios in positive direction (default 1.5) |
-| $fysfyNeg   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5)  |
-| $b1  | float| Controls rate of cyclic isotropic hardening in positive direction (default 0.8)  |
-| $b2   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8)  |
+| $FysFyPos  | float |  Saturation to initial yield strength ratios in positive direction (default 1.5) |
+| $FysFyNeg   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5)  |
+| $b_pos  | float| Controls rate of cyclic isotropic hardening in positive direction (default 0.8)  |
+| $b_neg   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8)  |
 | $Ed_tol     |float | Normalized energy tolerance for identifying partial unloading  (default 0.02)    |
 
 ### Example TCL Input 
@@ -89,7 +89,6 @@ fix 1 1 1
 fix 2 0 1
 # -----------------------------
 # Define Steel02M uniaxial material Arguments:
-# matTag E FyPos FyNeg alpha R0 cR1 cR2 <fysfyPos fysfyNeg> <a_pos a_neg> <b1 b2> <Ed_tol>
 set matTag 1
 set Fy 300
 set FyPos $Fy; # FyPos: Positive yield stress
@@ -151,7 +150,7 @@ puts "Finished analysis"
 ```
 ### Example Python Input 
 This Python input file generates the σ–ε (force–deformation) response shown in the figure for the Steel02M  material model.  
-**Python version:** 3.10
+**Python version:** 3.10.9
 
 ```python
 # corrected_truss_force_disp.py
@@ -173,7 +172,7 @@ ops.node(2, 1.0, 0.0)
 ops.fix(1, 1, 1)
 ops.fix(2, 0, 1)
 
-# Material (Steel02M as in your Tcl)
+# Material
 matTag = 1
 Fy = 300.0
 FyPos = Fy
