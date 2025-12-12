@@ -99,7 +99,7 @@ set b 0.0196; # alpha: Post yield stiffness ratio
 set R0 20.0; # R0: Initial transition curvature 
 set cR1 0.916; # cR1:  Parameter controlling transition curvature 
 set cR2 0.15; # cR2:  Parameter controlling transition curvature 
-set a_pos 0.0; # Control rate of transition in positive loading direction
+set a_pos 0.05; # Control rate of transition in positive loading direction
 set a_neg 0.074; # Control rate of transition in negative loading direction
 #uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$FysFyPos $FysFyNeg>  <$b_pos $b_neg> <Ed_tol>
 uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $b $R0 $cR1 $cR2 $a_pos $a_neg
