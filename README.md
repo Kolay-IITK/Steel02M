@@ -148,14 +148,102 @@ foreach peak $strainPeaks {
     analysis Static
 }
 puts "Finished analysis"
-
-
-
-
-
-
-
 ```
+### Example Python Input 
+This Python input file generates the σ–ε (force–deformation) response shown in the figure for the Steel02M  material model.  
+**Python version:** 3.10
+
+```python
+# corrected_truss_force_disp.py
+import openseespy.opensees as ops
+import numpy as np
+import matplotlib.pyplot as plt
+
+# -----------------------------
+# Model setup
+# -----------------------------
+ops.wipe()
+ops.model('basic', '-ndm', 2, '-ndf', 2)   # 2D, 2 dof per node (truss)
+
+# Nodes
+ops.node(1, 0.0, 0.0)
+ops.node(2, 1.0, 0.0)
+
+# Boundary conditions
+ops.fix(1, 1, 1)
+ops.fix(2, 0, 1)
+
+# Material (Steel02M as in your Tcl)
+matTag = 1
+Fy = 300.0
+FyPos = Fy
+FyNeg = -Fy
+E = 200000.0
+b = 0.0196
+R0 = 20.0
+cR1 = 0.916
+cR2 = 0.15
+a_pos = 0.05
+a_neg = 0.074
+
+ops.uniaxialMaterial('Steel02M', matTag, E, FyPos, FyNeg, b, R0, cR1, cR2, a_pos, a_neg)
+
+# Truss element
+eleTag = 1
+A = 1.0
+ops.element('truss', eleTag, 1, 2, A, matTag)
+
+# Load pattern (unit horizontal load at node 2)
+ops.timeSeries('Linear', 1)
+ops.pattern('Plain', 1, 1)
+ops.load(2, 1.0, 0.0)
+
+# Analysis components
+ops.system('BandGeneral')
+ops.numberer('RCM')
+ops.constraints('Plain')
+ops.test('NormDispIncr', 1e-8, 10)
+ops.algorithm('Newton')
+
+strainPeaks = [0,0,50,30,276,134,273,135,153,144,180,177,273,249,260,232,235,61]
+de = 1e-5
+
+disp_history = []
+force_history = []
+
+for peak in strainPeaks:
+    targetDisp = peak * 1e-4
+    currentDisp = ops.nodeDisp(2, 1)
+    dU = targetDisp - currentDisp
+    nSteps = int(round(dU / de))
+    if nSteps == 0:
+        continue
+
+    incr = de if nSteps > 0 else -de
+    ops.integrator('DisplacementControl', 2, 1, incr)
+    ops.analysis('Static')
+
+    for _ in range(abs(nSteps)):
+        ops.analyze(1)
+        # Record displacement and axial force (no fallback)
+        disp_history.append(ops.nodeDisp(2, 1))
+        force_history.append(ops.eleForce(eleTag)[0])
+
+# -----------------------------
+# Convert to arrays and plot
+# -----------------------------
+disp_arr = np.array(disp_history)
+force_arr = np.array(force_history)
+
+plt.figure(figsize=(6,4))
+plt.plot(disp_arr, -force_arr)
+plt.xlabel("Deformation (mm)")
+plt.ylabel("Axial Force (N)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+```
+
 Code developed by: Dr. Chinmoy Kolay, IIT Kanpur and implemented by Ms. Sukanya Karmakar, IIT Kanpur  
 Images developed by: Ms. Sukanya Karmakar, IIT Kanpur
 
