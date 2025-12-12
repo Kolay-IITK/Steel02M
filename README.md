@@ -1,24 +1,24 @@
 # Steel02M: An Improved Giuffr`e-Menegotto-Pinto Model
 
-A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance ΔŪₜₒₗ  for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when ΔŪₜₒₗ=−1 is used keeping all other parameters the same between the two models.
+A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance $\Delta \overline{U}_{tol}$ for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when this tolerance is set to $-1$, keeping all other parameters the same between the two models.
 
 The features of the Steel02M are as follows:
 - Eliminates the overshooting error caused by Steel02
-- Allows users to specify different initial yield strength in positive and negative loading directions
+- Allows users to specify different initial yield strengths in positive and negative loading directions
 - Removes redundant parameters in isotropic hardening of Steel02 (see the equations below for isotropic hardening in Steel02 and Steel02M) 
-- Allows users to control the rate of isotropic hardening in positive and negative loading direction through parameters (b⁺ and b⁻)
-- Allows user to limit the hardened yield strength through parameters (fᵧₛ⁺ and fᵧₛ⁻)
+- Allows users to control the rate of isotropic hardening in positive and negative loading directions through parameters ($b^\pm$)
+- Allows user to limit the hardened yield strength through parameters ($\eta^\pm$)
 
 **Steel02:**
 
 $$
 \sigma_y^{+} = \sigma_{y0}\left[1 + a_3 \left(\frac{\zeta}{a_4}\right)^{0.8}\right]
-= \sigma_{y0}\left[1 + a^{+}\zeta^{b^{+}}\right]
+= \sigma_{y0}\left[1 + a^{+}\zeta^{0.8}\right]
 $$
 
 $$
 \sigma_y^{-} = \sigma_{y0}\left[1 + a_1 \left(\frac{\zeta}{a_2}\right)^{0.8}\right]
-= \sigma_{y0}\left[1 + a^{-}\zeta^{b^{-}}\right]
+= \sigma_{y0}\left[1 + a^{-}\zeta^{0.8}\right]
 $$
 
 $$
@@ -30,7 +30,7 @@ $$
 
 $$
 \sigma_y^{\pm} = \sigma_{y0}^{\pm}\left[1 + a^{\pm}\zeta^{b^{\pm}}\right]
-\quad \text{subject to } |\sigma_y^{\pm}| \le f_{ys}^{\pm}|\sigma_{y0}^{\pm}|
+\quad \text{subject to } |\sigma_y^{\pm}| \le \eta^{\pm}|\sigma_{y0}^{\pm}|
 $$
 
 $$
@@ -57,7 +57,7 @@ uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos 
 | $matTag | int   | Unique tag for this material instance                                      |
 | $E   | float | Elastic Young’s modulus                                                            |
 | $Fypos  | float | Initial yield strength in positive loading direction                               |
-| $FyNeg  | float |  Initial yield strength in negative loading direction                            |
+| $FyNeg  | float |  Initial yield strength in negative loading direction (must be negative)                           |
 | $alpha   | float | Strain hardening ratio                                                    |
 | $R0  | float |  Initial value of R that controls smoothness of transition                                                   |
 | $cR1 | float | Controls the rate of change of R |
@@ -75,7 +75,7 @@ This TCL input file generates the σ–ε response shown in the figure for the S
 ```tcl
 # -----------------------------
 # Horizontal axial element(truss) with unit length and area with Steel02M material model
-#Unit considered:N,mm
+#Unit considered: N and mm
 # -----------------------------
 wipe
 model BasicBuilder -ndm 2 -ndf 2
@@ -99,9 +99,9 @@ set b 0.0196; # alpha: Post yield stiffness ratio
 set R0 20.0; # R0: Initial transition curvature 
 set cR1 0.916; # cR1:  Parameter controlling transition curvature 
 set cR2 0.15; # cR2:  Parameter controlling transition curvature 
-set a_pos 0.0; # Control rate of transition in positive loading direction
+set a_pos 0.05; # Control rate of transition in positive loading direction
 set a_neg 0.074; # Control rate of transition in negative loading direction
-#uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$fysfyPos $fysfyNeg>  <$b1 $b2> <Ed_tol>
+#uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$FysFyPos $FysFyNeg>  <$b_pos $b_neg> <Ed_tol>
 uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $b $R0 $cR1 $cR2 $a_pos $a_neg
 # -----------------------------
 # Truss
@@ -127,16 +127,16 @@ numberer RCM
 constraints Plain
 test NormDispIncr 1e-8 10
 algorithm Newton
-# strain peaks in units of 1e-3
-set strainPeaks {0 0 20 10 276 134 273 135 153 144 180 177 273 249 260 232 235 61}
+# strain peaks in units of 1e-4
+set strainPeaks {0 0 50 30 276 134 273 135 153 144 180 177 273 249 260 232 235 61}
 set de 1e-5 ;# displacement increment per step
 foreach peak $strainPeaks {    
     set targetDisp [expr $peak * 1e-4]
     set currentDisp [nodeDisp 2 1]
-    set dU [expr $targetDisp - $currentDisp]
-    set nSteps [expr round(($dU)/$de)]
+    set du [expr $targetDisp - $currentDisp]
+    set nSteps [expr round(($du)/$de)]
     puts "Loading to target strain = $peak x 1e-3 
-    dU = $dU  steps = $nSteps"
+    du = $du  steps = $nSteps"
 
     if {$nSteps != 0} {
         integrator DisplacementControl 2 1 $de
@@ -147,15 +147,103 @@ foreach peak $strainPeaks {
     }
     analysis Static
 }
-puts "Finished all peak loadings."
-
-
-
-
-
-
-
+puts "Finished analysis"
 ```
+### Example Python Input 
+This Python input file generates the σ–ε (force–deformation) response shown in the figure for the Steel02M  material model.  
+**Python version:** 3.10
+
+```python
+# corrected_truss_force_disp.py
+import openseespy.opensees as ops
+import numpy as np
+import matplotlib.pyplot as plt
+
+# -----------------------------
+# Model setup
+# -----------------------------
+ops.wipe()
+ops.model('basic', '-ndm', 2, '-ndf', 2)   # 2D, 2 dof per node (truss)
+
+# Nodes
+ops.node(1, 0.0, 0.0)
+ops.node(2, 1.0, 0.0)
+
+# Boundary conditions
+ops.fix(1, 1, 1)
+ops.fix(2, 0, 1)
+
+# Material (Steel02M as in your Tcl)
+matTag = 1
+Fy = 300.0
+FyPos = Fy
+FyNeg = -Fy
+E = 200000.0
+b = 0.0196
+R0 = 20.0
+cR1 = 0.916
+cR2 = 0.15
+a_pos = 0.05
+a_neg = 0.074
+
+ops.uniaxialMaterial('Steel02M', matTag, E, FyPos, FyNeg, b, R0, cR1, cR2, a_pos, a_neg)
+
+# Truss element
+eleTag = 1
+A = 1.0
+ops.element('truss', eleTag, 1, 2, A, matTag)
+
+# Load pattern (unit horizontal load at node 2)
+ops.timeSeries('Linear', 1)
+ops.pattern('Plain', 1, 1)
+ops.load(2, 1.0, 0.0)
+
+# Analysis components
+ops.system('BandGeneral')
+ops.numberer('RCM')
+ops.constraints('Plain')
+ops.test('NormDispIncr', 1e-8, 10)
+ops.algorithm('Newton')
+
+strainPeaks = [0,0,50,30,276,134,273,135,153,144,180,177,273,249,260,232,235,61]
+de = 1e-5
+
+disp_history = []
+force_history = []
+
+for peak in strainPeaks:
+    targetDisp = peak * 1e-4
+    currentDisp = ops.nodeDisp(2, 1)
+    dU = targetDisp - currentDisp
+    nSteps = int(round(dU / de))
+    if nSteps == 0:
+        continue
+
+    incr = de if nSteps > 0 else -de
+    ops.integrator('DisplacementControl', 2, 1, incr)
+    ops.analysis('Static')
+
+    for _ in range(abs(nSteps)):
+        ops.analyze(1)
+        # Record displacement and axial force (no fallback)
+        disp_history.append(ops.nodeDisp(2, 1))
+        force_history.append(ops.eleForce(eleTag)[0])
+
+# -----------------------------
+# Convert to arrays and plot
+# -----------------------------
+disp_arr = np.array(disp_history)
+force_arr = np.array(force_history)
+
+plt.figure(figsize=(6,4))
+plt.plot(disp_arr, -force_arr)
+plt.xlabel("Deformation (mm)")
+plt.ylabel("Axial Force (N)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+```
+
 Code developed by: Dr. Chinmoy Kolay, IIT Kanpur and implemented by Ms. Sukanya Karmakar, IIT Kanpur  
 Images developed by: Ms. Sukanya Karmakar, IIT Kanpur
 
