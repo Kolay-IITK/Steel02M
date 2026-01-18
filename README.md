@@ -143,8 +143,9 @@ foreach peak $strainPeaks {
             integrator DisplacementControl 2 1 [expr -$de]
             set nSteps [expr abs($nSteps)]
         }
-    }
     analysis Static
+    analyze $nSteps
+}
 }
 puts "Finished analysis"
 ```
