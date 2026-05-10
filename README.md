@@ -1,10 +1,10 @@
 # Steel02M: An Improved Giuffr`e-Menegotto-Pinto Model
 
-A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error using a simple energy-based approach that is controlled by an optional normalized energy dissipation tolerance $\overline{U}_{tol}$ for which a default value of 0.02 is recommended. Note that the Steel02M becomes identical to Steel02 when this tolerance is set to $-1$, keeping all other parameters the same between the two models.
+A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error through detection of overshooting followed by its elimination through curve selection, and controlling the Bauschinger effect. 
 
 The features of the Steel02M are as follows:
 - Eliminates the overshooting error caused by Steel02
-- Allows users to specify different initial yield strengths in positive and negative loading directions
+- Allows users to specify different initial yield strengths and strain-hardening ratio in positive and negative loading directions
 - Removes redundant parameters in isotropic hardening of Steel02 (see the equations below for isotropic hardening in Steel02 and Steel02M) 
 - Allows users to control the rate of isotropic hardening in positive and negative loading directions through parameters ($b^\pm$)
 - Allows user to limit the hardened yield strength through parameters ($\eta^\pm$)
@@ -50,15 +50,16 @@ $$
     
 ### Input Syntax
 ```tcl
-uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$etaPos $etaNeg>  <$b_pos $b_neg> <Ubar_tol>
+uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alphaPos $alphaNeg $R0 $cR1 $cR2 <$a_pos $a_neg> <$etaPos $etaNeg>  <$b_pos $b_neg>
 ```
 | Parameter | Type  | Description                                                                |
 | --------- | ----- | -------------------------------------------------------------------------- |
 | $matTag | int   | Unique tag for this material instance                                      |
 | $E   | float | Elastic Young’s modulus                                                            |
-| $Fypos  | float | Initial yield strength in positive loading direction                               |
+| $FyPos  | float | Initial yield strength in positive loading direction                               |
 | $FyNeg  | float |  Initial yield strength in negative loading direction (must be negative)                           |
-| $alpha   | float | Strain hardening ratio                                                    |
+| $alphaPos   | float | Strain hardening ratio in positive loading direction                                                  |
+| $alphaNeg   | float | Strain hardening ratio in negative loading direction  |
 | $R0  | float |  Initial value of R that controls smoothness of transition                                                   |
 | $cR1 | float | Controls the rate of change of R |
 | $cR2   | float | Controls the rate of change of R|
@@ -100,8 +101,8 @@ set cR1 0.916; # cR1:  Parameter controlling transition curvature
 set cR2 0.15; # cR2:  Parameter controlling transition curvature 
 set a_pos 0.05; # Control rate of transition in positive loading direction
 set a_neg 0.074; # Control rate of transition in negative loading direction
-#uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alpha $R0 $cR1 $cR2 <$a_pos $a_neg> <$etaPos $etaNeg>  <$b_pos $b_neg> <Ubar_tol>
-uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $b $R0 $cR1 $cR2 $a_pos $a_neg
+#uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alphaPos $alphaNeg $R0 $cR1 $cR2 <$a_pos $a_neg> <$etaPos $etaNeg>  <$b_pos $b_neg>
+uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $b $b $R0 $cR1 $cR2 $a_pos $a_neg
 # -----------------------------
 # Truss
 set eleTag 1
@@ -186,7 +187,7 @@ cR2 = 0.15
 a_pos = 0.05
 a_neg = 0.074
 
-ops.uniaxialMaterial('Steel02M', matTag, E, FyPos, FyNeg, b, R0, cR1, cR2, a_pos, a_neg)
+ops.uniaxialMaterial('Steel02M', matTag, E, FyPos, FyNeg, b, b, R0, cR1, cR2, a_pos, a_neg)
 
 # Truss element
 eleTag = 1
