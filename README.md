@@ -69,7 +69,6 @@ uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alphaPos $alphaNeg $R0 $cR1 
 | $etaNeg   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5)  |
 | $b_pos  | float| Controls rate of cyclic isotropic hardening in positive direction (default 0.8)  |
 | $b_neg   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8)  |
-| $Ubar_tol     |float | Normalized energy tolerance for identifying partial unloading  (default 0.02)    |
 
 ### Example TCL Input 
 This TCL input file generates the σ–ε response shown in the figure for the Steel02M material model.
