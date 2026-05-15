@@ -15,7 +15,8 @@ The proposed Steel02M model incorporates four additional features beyond the Ste
 
 <p align="center">
   <img src="parameter_study_steel02M.jpeg" width="500"><br>
-  <em>Figure 2 : Comparison of stress-strain response using Steel02 and Steel02M</em>
+  <em>Figure 2 : llustration of the additional features incorporated in the Steel02M material model, showing independent definitions in the positive and negative directions of: (a) strain hardening ratios, (b) initial yield strengths, (c) isotropic hardening rates, and (d) saturation-to-initial yield strength ratios
+    </em>
 </p>
 
 The loading protocol employed to illustrate these features was specified in terms of the normalized strain $\varepsilon/\varepsilon_{y0}^{+}$, where $\varepsilon_{y0}^{+}=\sigma_{y0}^{+}/E_0$, and consisted of progressively increasing cyclic amplitudes of $\pm1$, $\pm4$, $\pm7$, $\pm10$, $\pm13$, $\pm16$, and $\pm19$.
