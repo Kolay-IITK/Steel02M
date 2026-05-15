@@ -1,13 +1,35 @@
 # Steel02M: An Improved Giuffr`e-Menegotto-Pinto Model
 
-A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see the figure below). Steel02M eliminates this error through detection of overshooting followed by its elimination through curve selection, and controlling the Bauschinger effect. 
+A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see Figure 1). Steel02M eliminates this error through detection of overshooting followed by its elimination through curve selection, and controlling the Bauschinger effect. 
 
-The features of the Steel02M are as follows:
-- Eliminates the overshooting error caused by Steel02
-- Allows users to specify different initial yield strengths and strain-hardening ratio in positive and negative loading directions
-- Removes redundant parameters in isotropic hardening of Steel02 (see the equations below for isotropic hardening in Steel02 and Steel02M) 
-- Allows users to control the rate of isotropic hardening in positive and negative loading directions through parameters ($b^\pm$)
-- Allows user to limit the hardened yield strength through parameters ($\eta^\pm$)
+<p align="center">
+  <img src="Stress-strain_plot.png" width="500"><br>
+  <em>Figure 1 : Comparison of stress-strain response using Steel02 and Steel02M</em>
+</p>
+
+The proposed Steel02M model incorporates four additional features beyond the Steel02 material model, allowing independent definitions of material parameters in the positive and negative loading directions as illustrated in (see Figure 2):
+ - strain hardening ratios $(\alpha^{\pm})$
+ - initial yield strengths $(\sigma_{y0}^{\pm})$
+ - isotropic hardening rates $(b^{\pm})$
+ - saturation-to-initial yield strength ratios $(\eta^{\pm})$.
+
+<p align="center">
+  <img src="parameter_study_steel02M.jpeg" width="500"><br>
+  <em>Figure 2 : Comparison of stress-strain response using Steel02 and Steel02M</em>
+</p>
+
+The loading protocol employed to illustrate these features was specified in terms of the normalized strain $\varepsilon/\varepsilon_{y0}^{+}$, where $\varepsilon_{y0}^{+}=\sigma_{y0}^{+}/E_0$, and consisted of progressively increasing cyclic amplitudes of $\pm1$, $\pm4$, $\pm7$, $\pm10$, $\pm13$, $\pm16$, and $\pm19$.
+The parameters used were $R_0 = 20$, $\alpha^{\pm} = [0.03\; 0.03]$, $c_{R1} = 0.925$, $c_{R2} = 0.15$, $a^{\pm} = [0\; 0]$, $b^{\pm} = [0.8\; 0.8]$, and $\eta^{\pm} = [1.5\; 1.5]$.
+Note that $a^{\pm}$ were set to zero to eliminate isotropic hardening and clearly highlight the influence of $\alpha^{\pm}$ and $\sigma_{y0}^{\pm}$.
+
+Figure 2(a) illustrates the effect of independent strain hardening ratios, where $\alpha^{-}$ is reduced to $\alpha^{+}/100$. 
+Figure 2(b) shows the effect of asymmetric initial yield strengths, where $\sigma_{y0}^{-}$ is taken as $0.7\,\sigma_{y0}^{+}$.
+Figure 2(c) illustrates the influence of the cyclic isotropic hardening rate, where $a^{\pm}$ are updated from their previously defined values to $[0.04\; 0.04]$, and $b^{-} = 0.5\,b^{+}$. 
+A reduction in $b^{-}$ leads to earlier saturation of the maximum stress compared to the case with higher $b^{-}$.
+Next, $b^{\pm}$ were kept constant at $0.8$ to isolate the effect of $\eta^{\pm}$, with $\eta^{-}$ set to $0.8,\eta^{+}$.
+A lower value of $\eta^{-}$ results in earlier stress saturation and limits further stress growth, whereas a higher $\eta^{-}$ leads to continued stress hardening.
+
+Steel02M also removes redundant parameters in isotropic hardening of Steel02 (see the equations below for isotropic hardening in Steel02 and Steel02M) 
 
 **Steel02:**
 
@@ -40,13 +62,6 @@ $$
 $$
 \varepsilon_{y0}^{\pm} = \frac{\sigma_{y0}^{\pm}}{E_0}
 $$
-
-<p align="center">
-  <img src="Stress-strain_plot.png" width="500"><br>
-  <em>Figure : Comparison of stress-strain response using Steel02 and Steel02M</em>
-</p>
-
-
     
 ### Input Syntax
 ```tcl
@@ -56,19 +71,19 @@ uniaxialMaterial Steel02M $matTag $E $FyPos $FyNeg $alphaPos $alphaNeg $R0 $cR1 
 | --------- | ----- | -------------------------------------------------------------------------- |
 | $matTag | int   | Unique tag for this material instance                                      |
 | $E   | float | Elastic Young’s modulus                                                            |
-| $FyPos  | float | Initial yield strength in positive loading direction                               |
-| $FyNeg  | float |  Initial yield strength in negative loading direction (must be negative)                           |
-| $alphaPos   | float | Strain hardening ratio in positive loading direction                                                  |
-| $alphaNeg   | float | Strain hardening ratio in negative loading direction  |
+| $FyPos  | float | Initial yield strength in positive loading direction $$(\sigma_{y0}^{+})$$                             |
+| $FyNeg  | float |  Initial yield strength in negative loading direction (must be negative) $$(\sigma_{y0}^{-})$$                           |
+| $alphaPos   | float | Strain hardening ratio in positive loading direction $$(\alpha^{+})$$                                                 |
+| $alphaNeg   | float | Strain hardening ratio in negative loading direction $$(\alpha^{-})$$  |
 | $R0  | float |  Initial value of R that controls smoothness of transition                                                   |
 | $cR1 | float | Controls the rate of change of R |
 | $cR2   | float | Controls the rate of change of R|
 | $a_pos   | float | Controls cyclic isotropic hardening in positive loading direction (default 0)     |
 | $a_neg | float | Controls cyclic isotropic hardening in negative loading direction (default 0)  |
-| $etaPos  | float |  Saturation to initial yield strength ratios in positive direction (default 1.5) |
-| $etaNeg   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5)  |
-| $b_pos  | float| Controls rate of cyclic isotropic hardening in positive direction (default 0.8)  |
-| $b_neg   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8)  |
+| $etaPos  | float |  Saturation to initial yield strength ratios in positive direction (default 1.5) $$(\eta^{+})$$ |
+| $etaNeg   | float| Saturation to initial yield strength ratio in negative direction  (default 1.5) $$(\eta^{-})$$ |
+| $b_pos  | float| Controls rate of cyclic isotropic hardening in positive direction (default 0.8) $$(b^{+})$$  |
+| $b_neg   | float| Controls rate of cyclic isotropic hardening in negative direction (default 0.8) $$(b^{-})$$ |
 
 ### Example TCL Input 
 This TCL input file generates the σ–ε response shown in the figure for the Steel02M material model.
@@ -245,7 +260,7 @@ plt.show()
 ```
 
 Code developed by: Dr. Chinmoy Kolay, IIT Kanpur and implemented by Ms. Sukanya Karmakar, IIT Kanpur  
-Images developed by: Ms. Sukanya Karmakar, IIT Kanpur
+Images developed by: Ms. Sukanya Karmakar, IIT Kanpur and Mr. Baban Kumar, IIT Kanpur
 
 
 
