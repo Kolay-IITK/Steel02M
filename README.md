@@ -3,7 +3,7 @@
 A well-known limitation of the Steel02 material model in OpenSees is that it causes overshooting on reloading upon a small partial unloading (see Figure 1). Steel02M eliminates this error through detection of overshooting followed by its elimination through curve selection, and controlling the Bauschinger effect. 
 
 <p align="center">
-  <img src="Stress-strain_plot.png" width="500"><br>
+  <img src="Stres_Overshooting.png" width="500"><br>
   <em>Figure 1 : Comparison of stress-strain response using Steel02 and Steel02M</em>
 </p>
 
