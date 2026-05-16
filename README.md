@@ -19,18 +19,7 @@ The proposed Steel02M model incorporates four additional features beyond the Ste
     </em>
 </p>
 
-The loading protocol employed to illustrate these features was specified in terms of the normalized strain $\varepsilon/\varepsilon_{y0}^{+}$, where $\varepsilon_{y0}^{+}=\sigma_{y0}^{+}/E_0$, and consisted of progressively increasing cyclic amplitudes of $\pm1$, $\pm4$, $\pm7$, $\pm10$, $\pm13$, $\pm16$, and $\pm19$.
-The parameters used were $R_0 = 20$, $\alpha^{\pm} = [0.03\; 0.03]$, $c_{R1} = 0.925$, $c_{R2} = 0.15$, $a^{\pm} = [0\; 0]$, $b^{\pm} = [0.8\; 0.8]$, and $\eta^{\pm} = [1.5\; 1.5]$.
-Note that $a^{\pm}$ were set to zero to eliminate isotropic hardening and clearly highlight the influence of $\alpha^{\pm}$ and $\sigma_{y0}^{\pm}$.
-
-Figure 2(a) illustrates the effect of independent strain hardening ratios, where $\alpha^{-}$ is reduced to $\alpha^{+}/100$. 
-Figure 2(b) shows the effect of asymmetric initial yield strengths, where $\sigma_{y0}^{-}$ is taken as $0.7\,\sigma_{y0}^{+}$.
-Figure 2(c) illustrates the influence of the cyclic isotropic hardening rate, where $a^{\pm}$ are updated from their previously defined values to $[0.04\; 0.04]$, and $b^{-} = 0.5\,b^{+}$. 
-A reduction in $b^{-}$ leads to earlier saturation of the maximum stress compared to the case with higher $b^{-}$.
-Next, $b^{\pm}$ were kept constant at $0.8$ to isolate the effect of $\eta^{\pm}$, with $\eta^{-}$ set to $0.8,\eta^{+}$.
-A lower value of $\eta^{-}$ results in earlier stress saturation and limits further stress growth, whereas a higher $\eta^{-}$ leads to continued stress hardening.
-
-Steel02M also removes redundant parameters in isotropic hardening of Steel02 (see the equations below for isotropic hardening in Steel02 and Steel02M) 
+Steel02M  removes redundant parameters in isotropic hardening of Steel02 (see the equations below for isotropic hardening in Steel02 and Steel02M) 
 
 **Steel02:**
 
