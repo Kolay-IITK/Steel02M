@@ -14,7 +14,7 @@ The proposed Steel02M model incorporates four additional features beyond the Ste
  - saturation-to-initial yield strength ratios $(\eta^{\pm})$.
 
 <p align="center">
-  <img src="parameter_study_steel02M.jpeg" width="500"><br>
+  <img src="parameter_study_steel02M.jpeg" width="800"><br>
   <em>Figure 2 : llustration of the additional features incorporated in the Steel02M material model, showing independent definitions in the positive and negative directions of: (a) strain hardening ratios, (b) initial yield strengths, (c) isotropic hardening rates, and (d) saturation-to-initial yield strength ratios
     </em>
 </p>
