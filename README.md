@@ -252,5 +252,9 @@ plt.show()
 Code developed by: Dr. Chinmoy Kolay, IIT Kanpur and implemented by Ms. Sukanya Karmakar, IIT Kanpur  
 Images developed by: Ms. Sukanya Karmakar, IIT Kanpur and Mr. Baban Kumar, IIT Kanpur
 
+Reference:
+C. Kolay, S. Karmakar, B. Kumar , H. Kakoty. An Improved Giuffrè-Menegotto-Pinto Model: Implementation in OpenSees and Verification with Experimental Results. Earthquake Engineering & Structural Dynamics. 2026 (Accepted)
+
+
 
 
